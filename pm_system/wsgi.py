@@ -13,9 +13,12 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pm_system.settings')
 
 application = get_wsgi_application()
 
-# Run database migrations automatically for serverless environments
+# Run migrations and seed data on startup
 try:
     from django.core.management import call_command
     call_command('migrate', interactive=False)
+    
+    import seed_data
+    seed_data.seed()
 except Exception as e:
-    print(f"Migration error: {e}")
+    print(f"Startup error: {e}")
