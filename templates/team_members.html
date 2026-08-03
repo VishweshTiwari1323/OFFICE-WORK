@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Team Directory • PM Workspace{% endblock %}
+
+{% block content %}
+
+<div class="space-y-8 relative animate-card-entrance">
+
+    <!-- Ambient Glowing Background Bubbles -->
+    <div class="absolute -top-10 -left-10 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl animate-mesh-1 pointer-events-none"></div>
+    <div class="absolute top-1/2 -right-10 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl animate-mesh-2 pointer-events-none"></div>
+    <div class="absolute -bottom-10 left-1/3 w-64 h-64 bg-fuchsia-400/10 rounded-full blur-3xl animate-mesh-3 pointer-events-none"></div>
+
+    <!-- Navigation Breadcrumb -->
+    <div>
+        <a href="{% url 'manager_dashboard' %}" class="inline-flex items-center text-xs font-bold text-slate-500 hover:text-indigo-600 transition-colors space-x-2 group px-3.5 py-2 rounded-xl hover:bg-slate-100/80 w-max">
+            <svg class="w-4 h-4 transform group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
+            </svg>
+            <span>Back to Manager Dashboard</span>
+        </a>
+    </div>
+
+    <!-- ====== WELCOME BANNER ====== -->
+    <div class="relative bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-700 rounded-3xl p-6 sm:p-7 shadow-lg shadow-emerald-500/20 overflow-hidden flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5 reveal">
+        <div class="absolute -top-16 -right-16 w-56 h-56 bg-emerald-400/30 rounded-full blur-3xl animate-float pointer-events-none"></div>
+        <div class="absolute -bottom-20 left-1/4 w-64 h-64 bg-cyan-400/20 rounded-full blur-3xl animate-float-delay pointer-events-none"></div>
+        <div class="relative z-10 flex items-center space-x-4">
+            <div class="w-14 h-14 bg-gradient-to-tr from-emerald-600 to-teal-600 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-500/25 flex-shrink-0">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-2xl font-black text-white tracking-tight">Team Members Directory</h1>
+                <p class="text-xs text-emerald-100/80 font-medium mt-0.5">Inspect active team members, workload allocations, and logged productivity.</p>
+            </div>
+        </div>
+
+        <div class="relative z-10 inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md px-5 py-2.5 rounded-2xl border border-white/15 text-xs font-bold">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+            <span class="text-emerald-100 font-semibold">Total Members:</span>
+            <span class="text-white text-lg font-black">{{ total_members }}</span>
+        </div>
+    </div>
+
+    <!-- ====== MEMBER CARDS GRID ====== -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 reveal-stagger">
+        {% for member in members %}
+        <div class="reveal card-glow bg-white/90 backdrop-blur-xl rounded-3xl border border-slate-200/80 p-6 shadow-xs member-card-hover flex flex-col justify-between space-y-6">
+
+            <!-- Member Header & Avatar -->
+            <div class="flex items-start justify-between">
+                <div class="flex items-center space-x-3.5">
+                    <!-- Initials Avatar -->
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 text-white font-black text-base flex items-center justify-center shadow-md shadow-indigo-500/20 uppercase">
+                        {{ member.username|slice:":2" }}
+                    </div>
+                    <div>
+                        <h3 class="font-black text-slate-900 text-base leading-snug">{{ member.get_full_name|default:member.username }}</h3>
+                        <p class="text-xs text-slate-400 font-medium">@{{ member.username }}</p>
+                    </div>
+                </div>
+
+                <span class="px-2.5 py-1 text-[10px] font-extrabold uppercase rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+                    {{ member.role|default:"Employee" }}
+                </span>
+            </div>
+
+            <!-- Email Detail -->
+            {% if member.email %}
+            <div class="flex items-center space-x-2 text-xs text-slate-500 font-medium bg-slate-50/80 p-2.5 rounded-xl border border-slate-100">
+                <svg class="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+                <span class="truncate">{{ member.email }}</span>
+            </div>
+            {% endif %}
+
+            <!-- Performance / Task Stat Badges -->
+            <div class="grid grid-cols-3 gap-2 pt-2 border-t border-slate-100 text-center">
+                <div class="p-2.5 rounded-2xl bg-amber-50/60 border border-amber-100/80">
+                    <span class="block text-[10px] font-bold uppercase text-amber-700 tracking-wider">Active</span>
+                    <span class="text-base font-black text-slate-900 mt-0.5 block"><span data-count="{{ member.active_tasks_count|default:0 }}">0</span></span>
+                </div>
+                <div class="p-2.5 rounded-2xl bg-emerald-50/60 border border-emerald-100/80">
+                    <span class="block text-[10px] font-bold uppercase text-emerald-700 tracking-wider">Done</span>
+                    <span class="text-base font-black text-slate-900 mt-0.5 block"><span data-count="{{ member.completed_tasks_count|default:0 }}">0</span></span>
+                </div>
+                <div class="p-2.5 rounded-2xl bg-purple-50/60 border border-purple-100/80">
+                    <span class="block text-[10px] font-bold uppercase text-purple-700 tracking-wider">Hours</span>
+                    <span class="text-base font-black text-slate-900 mt-0.5 block"><span data-count="{{ member.total_logged_hours|default:0 }}">0</span>h</span>
+                </div>
+            </div>
+
+        </div>
+        {% empty %}
+        <div class="col-span-full p-12 text-center bg-white/50 rounded-3xl border border-dashed border-slate-300">
+            <p class="text-sm font-bold text-slate-500">No team members registered yet.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

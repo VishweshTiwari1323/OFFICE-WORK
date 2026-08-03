@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title|default:"Task Form" }} • PM System{% endblock %}
+
+{% block content %}
+
+<div class="relative min-h-[calc(100vh-10rem)] flex flex-col justify-center py-6 sm:py-10 px-4 sm:px-6 overflow-hidden">
+
+    <!-- Ambient Dynamic Mesh Background Lights -->
+    <div class="absolute top-10 left-1/4 w-96 h-96 bg-indigo-500/15 rounded-full blur-[120px] animate-mesh-1 pointer-events-none"></div>
+    <div class="absolute bottom-10 right-1/4 w-96 h-96 bg-purple-500/15 rounded-full blur-[120px] animate-mesh-2 pointer-events-none"></div>
+    <div class="absolute top-1/2 left-1/2 w-64 h-64 bg-fuchsia-400/10 rounded-full blur-[100px] animate-mesh-3 pointer-events-none"></div>
+
+    <!-- Geometric SVG Grid Pattern Background Overlay -->
+    <div class="absolute inset-0 bg-[linear-gradient(to_right,#8080800d_1px,transparent_1px),linear-gradient(to_bottom,#8080800d_1px,transparent_1px)] bg-[size:28px_28px] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none"></div>
+
+    <div class="max-w-3xl w-full mx-auto relative z-10 animate-card-entrance space-y-4">
+
+        <!-- Navigation Breadcrumb -->
+        <div>
+            <a href="{% url 'manager_dashboard' %}" class="inline-flex items-center text-xs font-bold text-slate-500 hover:text-indigo-600 transition-colors space-x-2 group px-3 py-1.5 rounded-xl hover:bg-slate-100/80 w-max">
+                <svg class="w-4 h-4 transform group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path>
+                </svg>
+                <span>Back to Manager Dashboard</span>
+            </a>
+        </div>
+
+        <!-- Main Card Container -->
+        <div class="relative bg-white/85 backdrop-blur-2xl rounded-3xl border border-white/80 shadow-[0_20px_60px_-15px_rgba(79,70,229,0.14)] overflow-hidden">
+
+            <!-- Glowing Top Gradient Accent Line -->
+            <div class="absolute top-0 inset-x-12 h-[3.5px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full shadow-[0_0_14px_rgba(99,102,241,0.6)]"></div>
+
+            <!-- Header Section -->
+            <div class="p-6 sm:p-8 border-b border-slate-100 flex items-start space-x-4">
+                <div class="relative group flex-shrink-0">
+                    <div class="absolute inset-0 bg-indigo-500/20 rounded-2xl blur-lg group-hover:bg-indigo-500/40 transition duration-300"></div>
+                    <div class="relative w-14 h-14 bg-gradient-to-tr from-indigo-600 to-purple-600 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/25 transform transition-all duration-300 group-hover:scale-105 group-hover:rotate-3">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-black text-slate-900 tracking-tight">{{ title|default:"Create New Task" }}</h1>
+                    <p class="text-xs sm:text-sm text-slate-500 mt-1 font-medium leading-relaxed">
+                        Assign deliverables, set priorities, and establish target due dates for team members.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Form Body -->
+            <form method="post" hx-post="{% url 'create_task' %}" hx-swap="innerHTML" hx-indicator="#form-spinner" class="p-6 sm:p-8 space-y-6">
+                {% csrf_token %}
+
+                <!-- Form-Level Error Alert -->
+                {% if form.non_field_errors %}
+                <div class="p-4 rounded-2xl bg-red-50/90 border border-red-200/80 text-red-700 text-xs sm:text-sm flex items-start space-x-3 shadow-xs">
+                    <svg class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <div class="font-semibold">
+                        {{ form.non_field_errors }}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Form Fields Responsive Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 form-field-wrapper">
+                    {% for field in form %}
+                    <div class="{% if field.name == 'title' or field.name == 'description' %}sm:col-span-2{% else %}sm:col-span-1{% endif %} space-y-1.5 group">
+
+                        <label for="{{ field.id_for_label }}" class="block text-[11px] font-extrabold text-slate-600 uppercase tracking-wider group-focus-within:text-indigo-600 transition-colors">
+                            {{ field.label }}
+                            {% if field.field.required %}<span class="text-red-500">*</span>{% endif %}
+                        </label>
+
+                        <div class="relative">
+                            {{ field }}
+                        </div>
+
+                        <!-- Field Errors -->
+                        {% if field.errors %}
+                        <p class="text-xs text-red-600 font-bold flex items-center space-x-1.5 mt-1.5">
+                            <svg class="w-3.5 h-3.5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>{{ field.errors.0 }}</span>
+                        </p>
+                        {% endif %}
+
+                        <!-- Help Text -->
+                        {% if field.help_text %}
+                        <p class="text-xs text-slate-400 font-medium mt-1.5">{{ field.help_text }}</p>
+                        {% endif %}
+
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Action Buttons Footer -->
+                <div class="pt-6 border-t border-slate-100 flex items-center justify-end space-x-3">
+                    <a href="{% url 'manager_dashboard' %}"
+                       class="px-5 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200/80 active:scale-[0.98] text-slate-700 text-xs sm:text-sm font-bold border border-slate-200/80 transition-all duration-200">
+                        Cancel
+                    </a>
+                    <button type="submit"
+                            class="inline-flex items-center space-x-2 px-6 py-3 rounded-2xl btn-shimmer active:scale-[0.98] text-xs sm:text-sm font-extrabold text-white shadow-lg focus:outline-none focus:ring-4 focus:ring-indigo-500/30 transition-all duration-200">
+                        <span class="htmx-indicator hidden">Saving...</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>Save Task</span>
+                    </button>
+                </div>
+
+                <div id="form-spinner" class="htmx-indicator hidden fixed inset-0 bg-white/60 backdrop-blur-sm z-50 flex items-center justify-center">
+                    <div class="w-10 h-10 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}
