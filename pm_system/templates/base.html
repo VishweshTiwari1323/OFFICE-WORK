@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-900/5">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}PM Workspace • Modern Task Management{% endblock %}</title>
+    {% load static %}
+
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- HTMX CDN -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Sortable.js for Drag-and-Drop Kanban -->
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <!-- Inline Button Styles (always available) -->
+    <style>
+        .btn-shimmer {
+            background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 50%, #4f46e5 100%);
+            background-size: 200% 100%;
+            transition: all 0.3s ease;
+        }
+        .btn-shimmer:hover {
+            background-position: 100% 0;
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.45);
+        }
+        .btn-shimmer-indigo {
+            background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 50%, #4f46e5 100%);
+            background-size: 200% 100%;
+            transition: all 0.3s ease;
+        }
+        .btn-shimmer-indigo:hover {
+            background-position: 100% 0;
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.45);
+        }
+    </style>
+    <!-- Tailwind Configuration for Custom Theme Extensions -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'glow-indigo': '0 0 25px -5px rgba(99, 102, 241, 0.35)',
+                        'glow-emerald': '0 0 25px -5px rgba(16, 185, 129, 0.35)',
+                        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- High-End Custom CSS Utilities & Keyframe Animations -->
+    <style>
+        /* Modern Native Scrollbar */
+        ::-webkit-scrollbar {
+            width: 7px;
+            height: 7px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f8fafc;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 99px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Glassmorphism primitives */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        /* Hover Lift Micro-Interactions */
+        .hover-lift {
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .hover-lift:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Smooth Page Entrance Transition */
+        @keyframes pageFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-page-entrance {
+            animation: pageFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Pulsing Status Dot Animation */
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.3); }
+        }
+        .animate-pulse-dot {
+            animation: pulseGlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        /* ============================================================
+           PREMIUM ANIMATION SYSTEM
+           ============================================================ */
+
+        /* Ambient Mesh Glow */
+        @keyframes meshGlow {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+            50% { transform: translate(35px, -30px) scale(1.18); opacity: 0.9; }
+        }
+        .animate-mesh-1 { animation: meshGlow 12s ease-in-out infinite; }
+        .animate-mesh-2 { animation: meshGlow 16s ease-in-out infinite 4s; }
+        .animate-mesh-3 { animation: meshGlow 19s ease-in-out infinite 8s; }
+
+        /* Gentle Floating */
+        @keyframes floaty {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-float { animation: floaty 6s ease-in-out infinite; }
+        .animate-float-delay { animation: floaty 7s ease-in-out infinite 1.6s; }
+
+        /* Animated Gradient Shift (text / borders / backgrounds) */
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .text-gradient-animated {
+            background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899, #f59e0b, #6366f1);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradientShift 8s ease infinite;
+        }
+
+        /* Shine Sweep Across Buttons */
+        @keyframes shineSweep {
+            0% { transform: translateX(-140%) skewX(-15deg); }
+            100% { transform: translateX(260%) skewX(-15deg); }
+        }
+        .btn-shine { position: relative; overflow: hidden; }
+        .btn-shine::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            height: 100%; width: 45%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+            transform: translateX(-140%) skewX(-15deg);
+            pointer-events: none;
+        }
+        .btn-shine:hover::after { animation: shineSweep 0.85s ease; }
+
+        /* Premium Card Hover Glow */
+        .card-glow {
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                        box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                        border-color 0.3s ease;
+        }
+        .card-glow:hover {
+            transform: translateY(-4px);
+            border-color: rgba(99, 102, 241, 0.35);
+            box-shadow: 0 22px 45px -18px rgba(79, 70, 229, 0.28),
+                        0 0 0 1px rgba(99, 102, 241, 0.08);
+        }
+
+        /* Slow Spin (decorative rings) */
+        @keyframes spinSlow { to { transform: rotate(360deg); } }
+        .animate-spin-slow { animation: spinSlow 16s linear infinite; }
+
+        /* Scroll-Reveal System */
+        .reveal {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+        .reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.94); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .animate-scale-in { animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        /* Animated Gradient Border Wrapper */
+        .border-animated {
+            background: linear-gradient(#ffffff, #ffffff) padding-box,
+                        linear-gradient(120deg, #6366f1, #a855f7, #ec4899, #6366f1) border-box;
+            background-size: 100% 100%, 300% 100%;
+            border: 2px solid transparent;
+            animation: gradientShift 6s ease infinite;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .reveal { opacity: 1; transform: none; transition: none; }
+            .animate-mesh-1, .animate-mesh-2, .animate-mesh-3,
+            .animate-float, .animate-float-delay, .animate-spin-slow { animation: none; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50/70 text-slate-800 min-h-screen flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
+
+    <!-- Scroll Progress Indicator -->
+    <div id="scroll-progress" class="fixed top-0 inset-x-0 h-1 z-[60] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 origin-left scale-x-0 transition-transform duration-150"></div>
+
+    <!-- Global Ambient Animated Background -->
+    <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
+        <div class="absolute inset-0 bg-gradient-to-br from-slate-50 via-indigo-50/50 to-purple-50/70"></div>
+        <div class="absolute -top-40 -left-40 w-[38rem] h-[38rem] bg-indigo-400/10 rounded-full blur-[140px] animate-mesh-1"></div>
+        <div class="absolute top-1/3 -right-40 w-[36rem] h-[36rem] bg-fuchsia-400/10 rounded-full blur-[140px] animate-mesh-2"></div>
+        <div class="absolute -bottom-32 left-1/4 w-[34rem] h-[34rem] bg-purple-400/10 rounded-full blur-[130px] animate-mesh-3"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:32px_32px] [mask-image:radial-gradient(ellipse_80%_60%_at_50%_0%,#000_40%,transparent_100%)]"></div>
+    </div>
+
+    <!-- Top Sticky Glassmorphic Header -->
+    <header class="sticky top-0 z-40 glass-nav shadow-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                
+                <!-- Workspace Brand Logo -->
+                <div class="flex items-center space-x-3">
+                    <a href="{% url 'dashboard' %}" class="flex items-center space-x-2.5 group">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/20 group-hover:scale-105 group-hover:rotate-3 transition-all duration-300">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 01-2-2h-2a2 2 0 01-2 2"></path>
+                            </svg>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="font-extrabold text-lg text-slate-900 tracking-tight group-hover:text-indigo-600 transition-colors">PM Workspace</span>
+                            <span class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest -mt-1">Enterprise</span>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Navigation Controls / User Identity -->
+                {% if user.is_authenticated %}
+                <div class="flex items-center space-x-5">
+                    
+<!-- Live Role Pill -->
+                     <div class="hidden sm:flex items-center space-x-3 bg-gradient-to-r from-indigo-600/20 to-purple-600/20 px-3.5 py-1.5 rounded-full border border-indigo-200/40">
+                         <span class="relative flex h-2 w-2">
+                             <span class="animate-pulse-dot absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                             <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                         </span>
+                         <span class="text-xs font-bold text-white capitalize">{{ user.username }}</span>
+                         {% if user.role %}
+                         <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-indigo-500/30 text-indigo-100 uppercase tracking-wider">
+                             {{ user.role }}
+                         </span>
+                         {% endif %}
+                     </div>
+
+                    <!-- Direct Dash Switcher Link -->
+                    <a href="{% url 'dashboard' %}" class="text-xs font-bold text-slate-600 hover:text-indigo-600 transition flex items-center space-x-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                        </svg>
+                        <span class="hidden md:inline">Dashboard</span>
+                    </a>
+
+                    <!-- Profile Settings Dropdown -->
+                    <div class="relative group">
+                        <button class="text-xs font-bold text-slate-600 hover:text-indigo-600 transition flex items-center space-x-1 focus:outline-none">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                            <span class="hidden md:inline">Profile</span>
+                            <svg class="w-3 h-3 transform group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-48 bg-white/95 backdrop-blur-xl rounded-2xl shadow-xl shadow-slate-900/10 border border-slate-200/60 py-1.5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                            <a href="{% url 'change_password' %}" class="flex items-center space-x-2.5 px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-150">
+                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                <span>Change Password</span>
+                            </a>
+                            <a href="{% url 'change_username' %}" class="flex items-center space-x-2.5 px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-150">
+                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                <span>Change Username</span>
+                            </a>
+                            <div class="border-t border-slate-100 my-1"></div>
+                            <form method="post" action="{% url 'logout' %}" class="inline">
+                                {% csrf_token %}
+                                <button type="submit" class="flex items-center space-x-2.5 w-full px-4 py-2.5 text-xs font-semibold text-red-600 hover:bg-red-50 transition-all duration-150">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                                    <span>Logout</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <!-- Hide Login button on the Login page itself -->
+                {% if request.resolver_match.url_name != 'login' %}
+                <div>
+                    <a href="{% url 'login' %}" class="text-xs font-bold bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white py-2.5 px-5 rounded-xl shadow-md shadow-indigo-500/20 hover:shadow-indigo-500/35 transition-all duration-200">
+                        Sign In
+                    </a>
+                </div>
+                {% endif %}
+                {% endif %}
+
+            </div>
+        </div>
+    </header>
+
+    <!-- Global Messages Alert Banner -->
+    {% if messages %}
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 w-full">
+        {% for message in messages %}
+        <div class="p-4 rounded-2xl text-xs sm:text-sm font-semibold mb-2 flex items-center justify-between shadow-sm animate-page-entrance {% if message.tags == 'error' %}bg-red-50 text-red-700 border border-red-200{% else %}bg-emerald-50 text-emerald-800 border border-emerald-200{% endif %}">
+            <div class="flex items-center space-x-2">
+                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>{{ message }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content Area Wrapper -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-page-entrance">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Clean Modern Footer -->
+    <footer class="bg-white/80 border-t border-slate-200/80 py-6 mt-auto backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-3">
+            <div class="flex items-center space-x-2">
+                <span class="font-bold text-slate-600">PM Workspace</span>
+                <span>•</span>
+                <span>Real-Time Project Operations</span>
+            </div>
+            <div class="text-slate-400">
+                &copy; PM System. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+<!-- Global Motion & Reveal Engine -->
+<script>
+(function () {
+    'use strict';
+
+    // 1. Scroll Progress Bar
+    var progress = document.getElementById('scroll-progress');
+    function updateProgress() {
+        if (!progress) return;
+        var st = window.scrollY;
+        var dh = document.documentElement.scrollHeight - window.innerHeight;
+        progress.style.transform = 'scaleX(' + (dh > 0 ? st / dh : 0) + ')';
+    }
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('resize', updateProgress);
+    updateProgress();
+
+    // 2. Scroll-Reveal with Staggered Children
+    var revealEls = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window && revealEls.length) {
+        // Apply staggered transition delays to children of .reveal-stagger
+        document.querySelectorAll('.reveal-stagger').forEach(function (parent) {
+            Array.prototype.forEach.call(parent.children, function (child, i) {
+                if (child.classList.contains('reveal')) {
+                    child.style.transitionDelay = (i * 70) + 'ms';
+                }
+            });
+        });
+
+        var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    io.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+        revealEls.forEach(function (el) { io.observe(el); });
+    } else {
+        revealEls.forEach(function (el) { el.classList.add('is-visible'); });
+    }
+
+    // 3. Count-Up Animation
+    function animateCount(el) {
+        var target = parseFloat(el.getAttribute('data-count')) || 0;
+        var isFloat = /\./.test(el.getAttribute('data-count') || '');
+        var duration = 1400;
+        var start = performance.now();
+        function tick(now) {
+            var p = Math.min((now - start) / duration, 1);
+            var eased = 1 - Math.pow(1 - p, 3);
+            var val = target * eased;
+            el.textContent = isFloat ? val.toFixed(1) : Math.round(val).toLocaleString();
+            if (p < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+    }
+
+    var counters = document.querySelectorAll('[data-count]');
+    if ('IntersectionObserver' in window && counters.length) {
+        var io2 = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    animateCount(entry.target);
+                    io2.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.4 });
+        counters.forEach(function (el) { io2.observe(el); });
+    } else {
+        counters.forEach(function (el) { el.textContent = el.getAttribute('data-count'); });
+    }
+})();
+</script>
+
+</body>
+</html>

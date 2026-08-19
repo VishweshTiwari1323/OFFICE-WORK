@@ -1,0 +1,307 @@
+/* static/css/login.css */
+
+/* ============================================================
+   KEYFRAME ANIMATIONS
+   ============================================================ */
+
+@keyframes blobFloat {
+    0%, 100% { transform: translate(0px, 0px) scale(1); }
+    33% { transform: translate(30px, -50px) scale(1.12); }
+    66% { transform: translate(-20px, 20px) scale(0.92); }
+}
+
+@keyframes slideUpEntrance {
+    from {
+        opacity: 0;
+        transform: translateY(28px) scale(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes shakeError {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-7px); }
+    40%, 80% { transform: translateX(7px); }
+}
+
+@keyframes meshGlow {
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+    50% { transform: translate(30px, -25px) scale(1.15); opacity: 0.8; }
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes pulseGlow {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
+}
+
+@keyframes floaty {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes shineSweep {
+    0% { transform: translateX(-140%) skewX(-15deg); }
+    100% { transform: translateX(260%) skewX(-15deg); }
+}
+
+@keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.94); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes badgePulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+    50% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+}
+
+@keyframes progressFill {
+    from { width: 0%; }
+}
+
+/* ============================================================
+   ANIMATION UTILITIES
+   ============================================================ */
+
+.animate-blob-1 { animation: blobFloat 8s infinite ease-in-out; }
+.animate-blob-2 { animation: blobFloat 10s infinite ease-in-out 2s; }
+.animate-blob-3 { animation: blobFloat 9s infinite ease-in-out 4s; }
+
+.animate-card-entrance {
+    animation: slideUpEntrance 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-shake {
+    animation: shakeError 0.4s ease-in-out;
+}
+
+.animate-mesh-1 { animation: meshGlow 12s infinite ease-in-out; }
+.animate-mesh-2 { animation: meshGlow 16s infinite ease-in-out 4s; }
+.animate-mesh-3 { animation: meshGlow 19s infinite ease-in-out 8s; }
+
+.animate-float { animation: floaty 6s ease-in-out infinite; }
+.animate-float-delay { animation: floaty 7s ease-in-out infinite 1.6s; }
+
+.animate-scale-in { animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+.animate-fade-slide-up {
+    animation: fadeSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-gradient {
+    background-size: 200% 100%;
+    animation: gradientShift 4s ease infinite;
+}
+
+.badge-pulse { animation: badgePulse 2s ease-in-out infinite; }
+
+/* ============================================================
+   PROGRESS BAR
+   ============================================================ */
+
+.progress-bar-fill {
+    animation: progressFill 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ============================================================
+   GLASSMORPHISM PRIMITIVES
+   ============================================================ */
+
+.glass-panel {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+.glass-nav {
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+/* ============================================================
+   HOVER LIFT MICRO-INTERACTIONS
+   ============================================================ */
+
+.hover-lift {
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hover-lift:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.08);
+}
+
+/* ============================================================
+   PREMIUM CARD HOVER GLOW
+   ============================================================ */
+
+.card-glow {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.3s ease;
+}
+.card-glow:hover {
+    transform: translateY(-4px);
+    border-color: rgba(99, 102, 241, 0.35);
+    box-shadow: 0 22px 45px -18px rgba(79, 70, 229, 0.28),
+                0 0 0 1px rgba(99, 102, 241, 0.08);
+}
+
+/* ============================================================
+   SHIMMER BUTTON
+   ============================================================ */
+
+.btn-shimmer {
+    background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 50%, #4f46e5 100%);
+    background-size: 200% 100%;
+    transition: all 0.3s ease;
+}
+.btn-shimmer:hover {
+    background-position: 100% 0;
+    box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.45);
+}
+
+.btn-shine {
+    position: relative;
+    overflow: hidden;
+}
+.btn-shine::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%; width: 45%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+    transform: translateX(-140%) skewX(-15deg);
+    pointer-events: none;
+}
+.btn-shine:hover::after { animation: shineSweep 0.85s ease; }
+
+/* ============================================================
+   QUICK ACTION BUTTONS
+   ============================================================ */
+
+.quick-action-btn {
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.quick-action-btn:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 20px -6px rgba(79, 70, 229, 0.2);
+}
+
+/* ============================================================
+   SECTION DIVIDER
+   ============================================================ */
+
+.section-divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(148, 163, 184, 0.3), transparent);
+}
+
+/* ============================================================
+   FORM FIELD STYLING
+   ============================================================ */
+
+.form-field-wrapper input,
+.form-field-wrapper select,
+.form-field-wrapper textarea {
+    width: 100% !important;
+    background-color: rgba(248, 250, 252, 0.8) !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 1rem !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    color: #0f172a !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.form-field-wrapper input:focus,
+.form-field-wrapper select:focus,
+.form-field-wrapper textarea:focus {
+    background-color: #ffffff !important;
+    border-color: #4f46e5 !important;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15) !important;
+    outline: none !important;
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+
+::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+::-webkit-scrollbar-track {
+    background: #f8fafc;
+}
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* ============================================================
+   CHART CONTAINER
+   ============================================================ */
+
+.chart-container {
+    position: relative;
+}
+.chart-container canvas {
+    max-height: 100%;
+}
+
+/* ============================================================
+   PRODUCTIVITY RING
+   ============================================================ */
+
+.productivity-ring svg {
+    transform: rotate(-90deg);
+}
+
+/* ============================================================
+   GLOW VARIANTS
+   ============================================================ */
+
+.stat-glow-red {
+    box-shadow: 0 0 20px -5px rgba(239, 68, 68, 0.15);
+}
+.stat-glow-amber {
+    box-shadow: 0 0 20px -5px rgba(245, 158, 11, 0.15);
+}
+.stat-glow-emerald {
+    box-shadow: 0 0 20px -5px rgba(16, 185, 129, 0.15);
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    .animate-blob-1, .animate-blob-2, .animate-blob-3,
+    .animate-mesh-1, .animate-mesh-2, .animate-mesh-3,
+    .animate-float, .animate-float-delay, .animate-card-entrance,
+    .animate-scale-in, .animate-fade-slide-up, .badge-pulse,
+    .progress-bar-fill, .card-glow, .hover-lift, .quick-action-btn {
+        animation: none !important;
+        transition: none !important;
+    }
+}
