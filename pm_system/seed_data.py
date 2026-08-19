@@ -28,6 +28,9 @@ print("  -> Existing data cleared.")
 
 # 1. Create Manager
 print("\n[2/6] Creating manager user...")
+# Use get_or_create to handle existing users - delete first if exists to ensure clean state
+User = get_user_model()
+User.objects.filter(username="vishwesh_manager").delete()
 manager, created = User.objects.get_or_create(
     username="vishwesh_manager",
     defaults={
@@ -41,13 +44,16 @@ manager, created = User.objects.get_or_create(
 )
 manager.set_password("ManagerPass2026!")
 manager.save()
-print(f"  -> Manager '{manager.username}' created.")
+print(f"  -> Manager {'created' if created else 'retrieved'}: '{manager.username}'.")
 
 # 2. Create 10 Employees
 print("\n[3/6] Creating 10 employees...")
+# Delete existing employees first to ensure clean state
+User.objects.filter(role='employee').delete()
+
 employees_data = [
     ("emp_alex", "Alex", "Johnson"),
-    ("emp_sarah", "Sarah", "Connor"),
+    ("emp_sarah", "Sarah", " Connor"),
     ("emp_david", "David", "Miller"),
     ("emp_emily", "Emily", "Davis"),
     ("emp_michael", "Michael", "Brown"),
@@ -76,6 +82,9 @@ print(f"  -> {len(employees)} employees created.")
 
 # 3. Create Projects
 print("\n[4/6] Creating 4 projects...")
+# Delete existing projects first
+Project.objects.all().delete()
+
 projects_data = [
     ("Mobile App Redesign", "Complete UI/UX overhaul of iOS & Android apps."),
     ("Cloud Migration", "Migrate on-prem servers to AWS infrastructure."),
@@ -94,6 +103,9 @@ print(f"  -> {len(projects)} projects created.")
 
 # 4. Create Tasks (12 total)
 print("\n[5/6] Creating 12 tasks...")
+# Delete existing tasks first
+Task.objects.all().delete()
+
 today = timezone.now().date()
 
 tasks_sample = [
@@ -127,6 +139,9 @@ print(f"  -> {len(tasks_sample)} tasks created.")
 
 # 5. Create Daily Work Logs
 print("\n[6/6] Creating daily work logs...")
+# Delete existing work logs first
+DailyReport.objects.all().delete()
+
 log_entries = [
     (employees[0], today - timedelta(days=3), "Completed Figma wireframes for mobile app redesign.", 8.0),
     (employees[1], today - timedelta(days=1), "Setup AWS S3 buckets and configured IAM policies.", 7.5),
