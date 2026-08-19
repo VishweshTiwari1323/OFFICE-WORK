@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "pm_system/wsgi.py",
+      "src": "pm_system/pm_system/wsgi.py",
       "use": "@vercel/python",
       "config": { "maxLambdaSize": "15mb" }
     }
@@ -10,7 +10,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "pm_system/wsgi.py"
+      "dest": "pm_system/pm_system/wsgi.py"
     }
   ]
 }
