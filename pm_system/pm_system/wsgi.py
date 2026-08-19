@@ -1,18 +1,14 @@
-"""
-WSGI config for pm_system project.
-
-It exposes the WSGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/6.0/howto/deployment/wsgi/
-"""
 import os
+import sys
+from pathlib import Path
+
+# Add outer and inner pm_system directories to Python system path
+BASE_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(BASE_DIR))
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pm_system.settings')
 
 from django.core.wsgi import get_wsgi_application
 
 application = get_wsgi_application()
-
-# Required for Vercel to recognize the WSGI app
 app = application
