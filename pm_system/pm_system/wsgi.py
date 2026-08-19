@@ -24,12 +24,14 @@ from django.core.wsgi import get_wsgi_application
 
 application = get_wsgi_application()
 
-# Run migrations and seed data on startup
+# Run migrations and import seed data
 try:
     from django.core.management import call_command
     call_command('migrate', interactive=False, verbosity=0)
+    # Import seed_data - it runs seeding on import due to top-level code
     import seed_data
-    seed_data.seed()
+    print("Migrations completed and seed data loaded", flush=True)
 except Exception as e:
     import traceback
     traceback.print_exc()
+    print(f"Startup error: {type(e).__name__}: {e}", flush=True)
