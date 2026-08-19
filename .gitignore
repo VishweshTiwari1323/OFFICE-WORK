@@ -1,0 +1,18 @@
+# Django project .gitignore
+# http://django-atom.readthedocs.io/en/latest/topics/deployment.html
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.env
+
+# Django specific
+db.sqlite3
+
+# Static files
+staticfiles/
+
+# Project specific
+db.sqlite3

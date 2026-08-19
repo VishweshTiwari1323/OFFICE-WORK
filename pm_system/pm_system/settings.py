@@ -74,10 +74,12 @@ WSGI_APPLICATION = 'pm_system.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+import os
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': '/tmp/db.sqlite3' if os.environ.get('VERCEL') else BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -120,6 +122,7 @@ STATIC_URL = 'static/'
 # Tell Django to use our custom User model instead of the default one
 AUTH_USER_MODEL = 'core.User'
 
+
 # Ensure pathlib Path is imported (Django includes this by default near top of settings.py)
 # TEMPLATES setting modification:
 
@@ -127,13 +130,3 @@ AUTH_USER_MODEL = 'core.User'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'login'
-
-import dj_database_url
-import os
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/tmp/db.sqlite3' if os.environ.get('VERCEL') else BASE_DIR / 'db.sqlite3',
-    }
-}
